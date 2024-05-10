@@ -17,7 +17,8 @@ datazone:
     example_project:
       description: "Example Project"
       glossary_terms: ["example"]
-environments:
+redshift:
+datazone_environments:
   tfe_workspace: workspace2
   datazone_workspace_name: "workspace1"
   datazone_environment_profiles:
