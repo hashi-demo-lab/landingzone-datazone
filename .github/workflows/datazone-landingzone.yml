@@ -21,7 +21,7 @@ jobs:
         id: datazone-config
         run: |
           cd config
-          ls -d */ | sed 's|/$||' | jq -R . | jq -s .
+          ls *.yaml | jq -R . | jq -s .
           echo "datazone_config="$(ls *.yaml | jq -R . | jq -s .)"" >> $GITHUB_OUTPUT
     outputs: 
         datazone_config: ${{ steps.datazone-config.outputs.datazone_config }}
