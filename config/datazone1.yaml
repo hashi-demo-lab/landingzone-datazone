@@ -1,0 +1,42 @@
+datazone:
+  tfe_workspace: workspace1
+  datazone_domain_name: "example_domain1"
+  datazone_description: "AWS DataZone Domain"
+  datazone_kms_key_identifier: null
+  single_sign_on: {}
+  tags: null
+  region: "ap-southeast-2"
+  environment_blueprints:
+    DefaultDataWarehouse:
+      enabled_regions: ["ap-southeast-2"]
+      environment_blueprint_identifier: "DefaultDataWarehouse"
+    DefaultDataLake:
+      enabled_regions: ["ap-southeast-2"]
+      environment_blueprint_identifier: "DefaultDataLake"
+  datazone_projects:
+    example_project:
+      description: "Example Project"
+      glossary_terms: ["example"]
+environments:
+  tfe_workspace: workspace2
+  datazone_workspace_name: "workspace1"
+  datazone_environment_profiles:
+    DefaultDataLake:
+      aws_account_id: "855831148133"
+      name: "DataLake_profile"
+      region: "ap-southeast-2"
+      environment_blueprint_identifier: "DefaultDataLake"
+      project_identifier: "shared_env"
+  datazone_environments:
+    Raw:
+      name: "RawDataLake"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "data_project1"
+    Curated:
+      name: "CuratedDataLake"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "data_project2"
+    Product:
+      name: "ProductDataLake"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "data_project3"
