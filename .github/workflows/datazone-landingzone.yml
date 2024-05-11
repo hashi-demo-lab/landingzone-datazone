@@ -17,6 +17,9 @@ jobs:
     steps:
       - name: checkout-repo
         uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/landingzone-datazone
+          path: config
       - name: get-datazone-yaml
         id: datazone-config
         run: |
@@ -42,8 +45,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/landingzone-datazone
-          sparse-checkout: |
-            config
           path: config
       - name: check-directory
         id: check-dir
