@@ -53,27 +53,28 @@ jobs:
           cd config
           ls -l 
       - name: validate-yaml
-        uses: mikefarah/yq@master
+        uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v; 
       - name: get-workspace
         id: workspace-name
-        uses: mikefarah/yq@master
+        uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.datazone.tfe_workspace' './config/${{ matrix.domain }}'
+          cmd: yq .datazone.tfe_workspace ./config/${{ matrix.domain }}
       - name: check-redshift
-        id: check_redshift
-        uses: mikefarah/yq@master
+        id: check-redshift
+        uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.redshift' './config/${{ matrix.domain }}'
+          cmd: yq .redshift ./config/${{ matrix.domain }}
       - name: check-environments
         id: check-env
-        uses: mikefarah/yq@master
+        uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq '.datazone_environments' './config/${{ matrix.domain }}'
-      - name: check-output
-        id: check-output
-        run: |
-          echo '{{ steps.workspace-name.outputs.result }}'
-          echo '{{ steps.check-redshift.outputs.result }}'
-          echo '{{ steps.check-env.outputs.result }}'
+          cmd: yq .datazone_environments ./config/${{ matrix.domain }}
+
+      - name: output environment
+        run: echo ${{ steps.check-env.outputs.result }}
+      - name: output redshift
+        run: echo ${{ steps.check-redshift.outputs.result }}
+      - name: output redshift
+        run: echo ${{ steps.workspace-name.outputs.result }}
