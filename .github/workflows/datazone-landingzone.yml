@@ -71,10 +71,38 @@ jobs:
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone_environments ./config/${{ matrix.domain }}
-
       - name: output environment
         run: echo '${{ steps.check-env.outputs.result }}'
       - name: output redshift
         run: echo '${{ steps.check-redshift.outputs.result }}'
       - name: output workspace
         run: echo '${{ steps.workspace-name.outputs.result }}'
+        
+  datazone-env:
+    needs: [parse-datazone, datazone-domain]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 15
+      matrix: 
+        domain: ${{fromJson(needs.parse-datazone.outputs.datazone_config)}}
+        steps:
+          - name: datazone-env-tf
+            uses: actions/checkout@v4
+            with:
+              repository: hashi-demo-lab/template-datazone-domain
+          - name: checkout-config
+            uses: actions/checkout@v4
+            with:
+              repository: hashi-demo-lab/landingzone-datazone
+              path: config
+          - name: check-directory
+            id: check-dir
+            run: |
+              ls -l
+              cd config
+              ls -l
+          - name: get-env-workspace
+            id: workspace-name
+            uses: mikefarah/yq@v4.43.1
+            with:
+              cmd: yq .datazone_environments.tfe_workspace ./config/${{ matrix.domain }}
