@@ -49,15 +49,13 @@ jobs:
       - name: check-directory
         id: check-dir
         run: |
-          ls -l
-          cd config
-          ls -l 
+          ls -l;cd config;ls -l 
       - name: validate-yaml
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v; 
       - name: get-workspace
-        id: workspace-name
+        id: domain-workspace
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone.tfe_workspace ./config/${{ matrix.domain }}
@@ -76,7 +74,38 @@ jobs:
       - name: output redshift
         run: echo '${{ steps.check-redshift.outputs.result }}'
       - name: output workspace
-        run: echo '${{ steps.workspace-name.outputs.result }}'
+        run: echo '${{ steps.domain-workspace.outputs.result }}'
+
+      - name: tf-upload-config
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: upload
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
+          speculative: true
+  
+      - name: tf-plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: run
+        ## run may fail, if so continue to output PR comment
+        ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
+        continue-on-error: true
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+          plan_only: true
+          ## OPTIONAL: set your own message for run. A default message will be defined for you.
+          ## Example:
+          message: "Triggered From GitHub Actions CI ${{ github.sha }}"
+
+      - name: tf-plan-output
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: plan-output
+        with:
+          plan: ${{ steps.run.outputs.plan_id }}
         
   datazone-env:
     needs: [parse-datazone, datazone-domain]
@@ -98,11 +127,47 @@ jobs:
       - name: check-directory
         id: check-dir
         run: |
-          ls -l
-          cd config
-          ls -l
+          ls -l;cd config;ls -l
+
+      - name: check-environments
+        id: check-env
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .datazone_environments ./config/${{ matrix.domain }}
+
       - name: get-env-workspace
-        id: workspace-name
+        id: env-workspace
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone_environments.tfe_workspace ./config/${{ matrix.domain }}
+
+      - name: tf-upload-config
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: upload
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
+          speculative: true
+  
+      - name: tf-plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: run
+        ## run may fail, if so continue to output PR comment
+        ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
+        continue-on-error: true
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+          plan_only: true
+          ## OPTIONAL: set your own message for run. A default message will be defined for you.
+          ## Example:
+          message: "Triggered From GitHub Actions CI ${{ github.sha }}"
+
+      - name: tf-plan-output
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: plan-output
+        with:
+          plan: ${{ steps.run.outputs.plan_id }}
