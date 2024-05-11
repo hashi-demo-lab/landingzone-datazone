@@ -36,14 +36,14 @@ datazone_environments:
       project_identifier: "shared_env"
   datazone_environments:
     Raw:
-      name: "RawDataLake"
+      name: "payments_datalake_raw"
       environment_profile_identifier: "DefaultDataLake"
-      project_identifier: "data_project1"
+      project_identifier: "rbs_payments_raw"
     Curated:
-      name: "CuratedDataLake"
+      name: "payments_datalake_curated"
       environment_profile_identifier: "DefaultDataLake"
-      project_identifier: "data_project2"
+      project_identifier: "rbs_payments_curated"
     Product:
-      name: "ProductDataLake"
+      name: "payments_datalake+product"
       environment_profile_identifier: "DefaultDataLake"
-      project_identifier: "data_project3"
+      project_identifier: "rbs_payments_product"
