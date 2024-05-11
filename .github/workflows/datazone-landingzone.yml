@@ -34,14 +34,17 @@ jobs:
       matrix: 
         domain: ${{fromJson(needs.parse-datazone.outputs.datazone_config)}}
     steps:
-      - name: checkout-config
-        uses: actions/checkout@v4
-        with:
-          path: config
       - name: datazone-tf
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/template-datazone-domain
+      - name: checkout-config
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/landingzone-datazone
+          sparse-checkout: |
+            config
+          path: config
       - name: check-directory
         id: check-dir
         run: |
