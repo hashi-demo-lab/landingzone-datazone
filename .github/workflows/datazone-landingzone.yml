@@ -70,7 +70,7 @@ jobs:
         id: check-env
         uses: mikefarah/yq@master
         with:
-          cmd: yq '.datazone_environments' './config/${{ matrix.domain }}''
+          cmd: yq '.datazone_environments' './config/${{ matrix.domain }}'
       - name: check-output
         id: check-output
         run: |
