@@ -73,8 +73,8 @@ jobs:
           cmd: yq .datazone_environments ./config/${{ matrix.domain }}
 
       - name: output environment
-        run: echo ${{ steps.check-env.outputs.result }}
+        run: echo '${{ steps.check-env.outputs.result }}'
       - name: output redshift
-        run: echo ${{ steps.check-redshift.outputs.result }}
-      - name: output redshift
-        run: echo ${{ steps.workspace-name.outputs.result }}
+        run: echo '${{ steps.check-redshift.outputs.result }}'
+      - name: output workspace
+        run: echo '${{ steps.workspace-name.outputs.result }}'

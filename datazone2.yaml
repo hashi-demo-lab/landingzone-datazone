@@ -17,7 +17,7 @@ datazone:
     example_project:
       description: "Example Project"
       glossary_terms: ["example"]
-environments:
+datazone_environments:
   tfe_workspace: dz2_env_workspace4
   datazone_workspace_name: "dz2_workspace3"
   datazone_environment_profiles:
