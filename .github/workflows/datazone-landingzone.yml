@@ -60,20 +60,20 @@ jobs:
         id: workspace-name
         uses: mikefarah/yq@master
         with:
-          cmd: yq '.datazone.tfe_workspace' ./config/${{ matrix.domain }}
+          cmd: yq '.datazone.tfe_workspace' './config/${{ matrix.domain }}'
       - name: check-redshift
         id: check_redshift
         uses: mikefarah/yq@master
         with:
-          cmd: yq '.redshift' ./config/${{ matrix.domain }}
+          cmd: yq '.redshift' './config/${{ matrix.domain }}'
       - name: check-environments
         id: check-env
         uses: mikefarah/yq@master
         with:
-          cmd: yq '.datazone_environments' ./config/${{ matrix.domain }}
+          cmd: yq '.datazone_environments' './config/${{ matrix.domain }}''
       - name: check-output
         id: check-output
         run: |
-          echo '{{ steps.workspace-name.outputs }}'
-          echo '{{ steps.check-redshift.outputs }}'
-          echo '{{ steps.check-env.outputs }}'
+          echo '{{ steps.workspace-name.outputs.result }}'
+          echo '{{ steps.check-redshift.outputs.result }}'
+          echo '{{ steps.check-env.outputs.result }}'
