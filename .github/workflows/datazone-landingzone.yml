@@ -42,3 +42,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/template-datazone-domain
+      - name: check-directory
+        id: check-dir
+        run: |
+          ls -l
