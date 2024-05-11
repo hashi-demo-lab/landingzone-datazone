@@ -56,7 +56,7 @@ jobs:
         id: workspace_name
         uses: mikefarah/yq@master
         with:
-          cmd: yq 'datazone.tfe_workspace' ./config/${{ matrix.domain }}
+          cmd: yq '.datazone.tfe_workspace' ./config/${{ matrix.domain }}
       - name: check-redshift
         id: check_redshift
         uses: mikefarah/yq@master
