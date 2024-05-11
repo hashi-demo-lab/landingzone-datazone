@@ -93,7 +93,7 @@ jobs:
         ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
         continue-on-error: true
         with:
-          workspace: ${{ steps.env-workspace.outputs.result }}
+          workspace: ${{ steps.domain-workspace.outputs.result }}
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
           plan_only: true
           ## OPTIONAL: set your own message for run. A default message will be defined for you.
