@@ -44,7 +44,6 @@ jobs:
           repository: hashi-demo-lab/landingzone-datazone
           sparse-checkout: |
             config
-          path: config
       - name: check-directory
         id: check-dir
         run: |
