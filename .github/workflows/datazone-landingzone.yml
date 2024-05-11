@@ -52,6 +52,10 @@ jobs:
           ls -l
           cd config
           ls -l 
+      - name: validate-yaml
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v; 
       - name: get-workspace
         id: workspace_name
         uses: mikefarah/yq@master
@@ -67,3 +71,9 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: yq '.datazone_environments' ./config/${{ matrix.domain }}
+      - name: check-output
+        id: check_output
+        run: |
+          echo {{ steps.get-workspace.outputs }}
+          echo {{ steps.check-redshift.outputs }}
+          echo {{ steps.check-environments.outputs }}
