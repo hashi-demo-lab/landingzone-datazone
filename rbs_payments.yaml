@@ -1,7 +1,7 @@
 datazone:
-  tfe_workspace: workspace1
-  datazone_domain_name: "example_domain1"
-  datazone_description: "AWS DataZone Domain"
+  tfe_workspace: retail_payments_datazone_ws
+  datazone_domain_name: "retail_payments"
+  datazone_description: "RBS Payments Datazone"
   datazone_kms_key_identifier: null
   single_sign_on: {}
   tags: null
@@ -14,8 +14,14 @@ datazone:
       enabled_regions: ["ap-southeast-2"]
       environment_blueprint_identifier: "DefaultDataLake"
   datazone_projects:
-    example_project:
-      description: "Example Project"
+    rbs_payments_raw:
+      description: "rbs payments raw"
+      glossary_terms: ["example"]
+    rbs_payments_curated:
+      description: "rbs payments curated"
+      glossary_terms: ["example"]
+    rbs_payments_product:
+      description: "rbs payments product"
       glossary_terms: ["example"]
 redshift:
 datazone_environments:
