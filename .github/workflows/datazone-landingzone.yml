@@ -49,3 +49,5 @@ jobs:
         id: check-dir
         run: |
           ls -l
+          cd config
+          ls -l 
