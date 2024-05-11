@@ -25,8 +25,8 @@ datazone:
       glossary_terms: ["example"]
 redshift:
 datazone_environments:
-  tfe_workspace: workspace2
-  datazone_workspace_name: "workspace1"
+  tfe_workspace: retail_payments_datazone_env_ws
+  datazone_workspace_name: "retail_payments_datazone_ws"
   datazone_environment_profiles:
     DefaultDataLake:
       aws_account_id: "855831148133"
