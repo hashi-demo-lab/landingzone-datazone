@@ -81,7 +81,7 @@ jobs:
         if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
         id: upload
         with:
-          workspace: ${{ steps.env-workspace.outputs.result }}
+          workspace: ${{ steps.domain-workspace.outputs.result }}
           directory: ${{ env.CONFIG_DIRECTORY }}
           speculative: true
   
