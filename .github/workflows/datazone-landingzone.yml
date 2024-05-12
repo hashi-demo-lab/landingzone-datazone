@@ -92,7 +92,6 @@ jobs:
         with:
           workspace: ${{ steps.domain-workspace.outputs.result }}
           directory: ${{ env.CONFIG_DIRECTORY }}
-          speculative: true
   
       - name: tf-plan
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
