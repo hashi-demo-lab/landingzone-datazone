@@ -157,6 +157,11 @@ jobs:
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone_environments.tfe_workspace ./config/${{ matrix.domain }}
+    
+      - name: set-tfvars #auto tf vars to set file name for domain yaml
+        run: |
+          echo ${{ matrix.domain }}
+          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvar
 
       - name: tf-upload-config
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0

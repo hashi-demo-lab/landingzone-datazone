@@ -27,6 +27,7 @@ redshift:
 datazone_environments:
   tfe_workspace: retail_payments_datazone_env_ws
   datazone_workspace_name: "retail_payments_datazone_ws"
+  region: "ap-southeast-2"
   datazone_environment_profiles:
     DefaultDataLake:
       aws_account_id: "855831148133"
