@@ -40,7 +40,7 @@ jobs:
       - name: datazone-tf
         uses: actions/checkout@v4
         with:
-          repository: hashi-demo-lab/template-datazone-domain
+          repository: hashi-demo-lab/template-datazone-domain-yaml
           
       - name: checkout-config
         uses: actions/checkout@v4
