@@ -41,38 +41,47 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/template-datazone-domain
+          
       - name: checkout-config
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/landingzone-datazone
           path: config
+
       - name: check-directory
         id: check-dir
         run: |
           ls -l;cd config;ls -l 
+
       - name: validate-yaml
         uses: mikefarah/yq@v4.43.1
         with:
-          cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v; 
+          cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v;
+
       - name: get-workspace
         id: domain-workspace
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone.tfe_workspace ./config/${{ matrix.domain }}
+
       - name: check-redshift
         id: check-redshift
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .redshift ./config/${{ matrix.domain }}
+
       - name: check-environments
         id: check-env
         uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq .datazone_environments ./config/${{ matrix.domain }}
+
       - name: output environment
         run: echo '${{ steps.check-env.outputs.result }}'
+
       - name: output redshift
         run: echo '${{ steps.check-redshift.outputs.result }}'
+
       - name: output workspace
         run: echo '${{ steps.domain-workspace.outputs.result }}'
 
@@ -106,6 +115,8 @@ jobs:
         id: plan-output
         with:
           plan: ${{ steps.run.outputs.plan_id }}
+
+
         
   datazone-env:
     needs: [parse-datazone, datazone-domain]
@@ -118,12 +129,14 @@ jobs:
       - name: datazone-env-tf
         uses: actions/checkout@v4
         with:
-          repository: hashi-demo-lab/template-datazone-domain
+          repository: hashi-demo-lab/template-datazone-domain-yaml
+
       - name: checkout-config
         uses: actions/checkout@v4
         with:
           repository: hashi-demo-lab/landingzone-datazone
           path: config
+
       - name: check-directory
         id: check-dir
         run: |
