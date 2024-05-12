@@ -85,6 +85,11 @@ jobs:
       - name: output workspace
         run: echo '${{ steps.domain-workspace.outputs.result }}'
 
+      - name: set-tfvars #auto tf vars to set file name for domain yaml
+        run: |
+          echo ${{ matrix.domain }}
+          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvars  
+
       - name: tf-upload-config
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
         if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
