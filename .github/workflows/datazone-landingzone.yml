@@ -133,7 +133,7 @@ jobs:
       - name: datazone-env-tf
         uses: actions/checkout@v4
         with:
-          repository: hashi-demo-lab/template-datazone-domain-yaml
+          repository: hashi-demo-lab/template-datazone-env-yaml
 
       - name: checkout-config
         uses: actions/checkout@v4
