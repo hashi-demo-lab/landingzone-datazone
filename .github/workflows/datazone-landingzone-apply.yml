@@ -1,4 +1,4 @@
-name: datazone-landingzone
+name: datazone-lz-apply
 on:
   workflow_dispatch:
   push:

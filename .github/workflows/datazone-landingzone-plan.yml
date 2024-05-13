@@ -1,4 +1,4 @@
-name: datazone-landingzone
+name: datazone-lz-plan
 on:
   workflow_dispatch:
   pull_request:
