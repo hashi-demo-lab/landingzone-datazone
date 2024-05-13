@@ -48,6 +48,6 @@ datazone_environments:
       environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_payments_curated"
     Product:
-      name: "payments_datalake+product"
+      name: "payments_datalake_product"
       environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_payments_product"
