@@ -14,6 +14,9 @@ datazone:
       enabled_regions: ["ap-southeast-2"]
       environment_blueprint_identifier: "DefaultDataLake"
   datazone_projects:
+    shared_env:
+      description: "shared environment"
+      glossary_terms: ["example"]
     rbs_payments_raw:
       description: "rbs payments raw"
       glossary_terms: ["example"]
