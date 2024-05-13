@@ -170,9 +170,8 @@ jobs:
         with:
           workspace: ${{ steps.env-workspace.outputs.result }}
           directory: ${{ env.CONFIG_DIRECTORY }}
-          speculative: true
   
-      - name: tf-plan
+      - name: tf-apply
         uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
         if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
         id: run
@@ -182,14 +181,13 @@ jobs:
         with:
           workspace: ${{ steps.env-workspace.outputs.result }}
           configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
-          plan_only: true
           ## OPTIONAL: set your own message for run. A default message will be defined for you.
           ## Example:
           message: "Triggered From GitHub Actions CI ${{ github.sha }}"
 
-      - name: tf-plan-output
-        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.0
-        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
-        id: plan-output
+      - uses: hashicorp/tfc-workflows-github/actions/apply-run@v1.3.0
+        id: apply
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' && fromJSON(steps.run.outputs.payload).data.attributes.actions.IsConfirmable }}
         with:
-          plan: ${{ steps.run.outputs.plan_id }}
+          run: ${{ steps.run.outputs.run_id }}
+          comment: "Apply Run from GitHub Actions CI ${{ github.sha }}"

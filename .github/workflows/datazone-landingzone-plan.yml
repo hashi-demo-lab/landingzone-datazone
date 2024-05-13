@@ -1,0 +1,195 @@
+name: datazone-landingzone
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+
+env:
+  # No need to pass as inputs to each action
+  TF_CLOUD_ORGANIZATION: ${{ vars.TF_CLOUD_ORGANIZATION }}
+  TF_API_TOKEN: ${{ secrets.TFE_TOKEN }}
+  TF_DIRECTORY: ""
+  
+jobs:
+  parse-datazone:
+    runs-on: "ubuntu-latest"
+    steps:
+      - name: checkout-repo
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/landingzone-datazone
+          path: config
+      - name: get-datazone-yaml
+        id: datazone-config
+        run: |
+          cd config
+          ls *.yaml | jq -R . | jq -s .
+          echo "datazone_config="$(ls *.yaml | jq -R . | jq -s .)"" >> $GITHUB_OUTPUT
+    outputs: 
+        datazone_config: ${{ steps.datazone-config.outputs.datazone_config }}
+  
+  datazone-domain:
+    needs: [parse-datazone]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 15
+      matrix: 
+        domain: ${{fromJson(needs.parse-datazone.outputs.datazone_config)}}
+    steps:
+      - name: datazone-tf
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/template-datazone-domain-yaml
+          
+      - name: checkout-config
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/landingzone-datazone
+          path: config
+
+      - name: check-directory
+        id: check-dir
+        run: |
+          ls -l;cd config;ls -l 
+
+      - name: validate-yaml
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq --exit-status 'tag == "!!map"' ./config/${{ matrix.domain }} -v;
+
+      - name: get-workspace
+        id: domain-workspace
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .datazone.tfe_workspace ./config/${{ matrix.domain }}
+
+      - name: check-redshift
+        id: check-redshift
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .redshift ./config/${{ matrix.domain }}
+
+      - name: check-environments
+        id: check-env
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .datazone_environments ./config/${{ matrix.domain }}
+
+      - name: output environment
+        run: echo '${{ steps.check-env.outputs.result }}'
+
+      - name: output redshift
+        run: echo '${{ steps.check-redshift.outputs.result }}'
+
+      - name: output workspace
+        run: echo '${{ steps.domain-workspace.outputs.result }}'
+
+      - name: set-tfvars #auto tf vars to set file name for domain yaml
+        run: |
+          echo ${{ matrix.domain }}
+          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvars  
+
+      - name: tf-upload-config
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: upload
+        with:
+          workspace: ${{ steps.domain-workspace.outputs.result }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
+  
+      - name: tf-plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: run
+        ## run may fail, if so continue to output PR comment
+        ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
+        continue-on-error: true
+        with:
+          workspace: ${{ steps.domain-workspace.outputs.result }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+          plan_only: true
+          ## OPTIONAL: set your own message for run. A default message will be defined for you.
+          ## Example:
+          message: "Triggered From GitHub Actions CI ${{ github.sha }}"
+
+      - name: tf-plan-output
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: plan-output
+        with:
+          plan: ${{ steps.run.outputs.plan_id }}
+
+
+        
+  datazone-env:
+    needs: [parse-datazone, datazone-domain]
+    runs-on: ubuntu-latest
+    strategy:
+      max-parallel: 15
+      matrix: 
+        domain: ${{fromJson(needs.parse-datazone.outputs.datazone_config)}}
+    steps:
+      - name: datazone-env-tf
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/template-datazone-env-yaml
+
+      - name: checkout-config
+        uses: actions/checkout@v4
+        with:
+          repository: hashi-demo-lab/landingzone-datazone
+          path: config
+
+      - name: check-directory
+        id: check-dir
+        run: |
+          ls -l;cd config;ls -l
+
+      - name: check-environments
+        id: check-env
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .datazone_environments ./config/${{ matrix.domain }}
+
+      - name: get-env-workspace
+        id: env-workspace
+        uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq .datazone_environments.tfe_workspace ./config/${{ matrix.domain }}
+    
+      - name: set-tfvars #auto tf vars to set file name for domain yaml
+        run: |
+          echo ${{ matrix.domain }}
+          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvar
+
+      - name: tf-upload-config
+        uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: upload
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          directory: ${{ env.CONFIG_DIRECTORY }}
+          speculative: true
+  
+      - name: tf-plan
+        uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: run
+        ## run may fail, if so continue to output PR comment
+        ## step.terraform-cloud-check-run-status will fail job after pr comment is created/updated.
+        continue-on-error: true
+        with:
+          workspace: ${{ steps.env-workspace.outputs.result }}
+          configuration_version: ${{ steps.upload.outputs.configuration_version_id }}
+          plan_only: true
+          ## OPTIONAL: set your own message for run. A default message will be defined for you.
+          ## Example:
+          message: "Triggered From GitHub Actions CI ${{ github.sha }}"
+
+      - name: tf-plan-output
+        uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.0
+        if: ${{ steps.check-env.outputs.result != '' &&  steps.check-env.outputs.result != 'null' }}
+        id: plan-output
+        with:
+          plan: ${{ steps.run.outputs.plan_id }}
