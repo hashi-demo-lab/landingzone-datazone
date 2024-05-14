@@ -159,7 +159,7 @@ jobs:
       - name: set-tfvars #auto tf vars to set file name for domain yaml
         run: |
           echo ${{ matrix.domain }}
-          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvar
+          echo 'datazone_domain_yaml_file="${{ matrix.domain }}"' >> pipeline-generated.auto.tfvars
 
       - name: tf-upload-config
         uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.0
