@@ -32,12 +32,12 @@ datazone_environments:
   datazone_workspace_name: "retail_contact_datazone_ws"
   region: "ap-southeast-2"
   datazone_environment_profiles:
-    DefaultDataLakeContact:
+    DefaultDataLake:
       aws_account_id: "855831148133"
       name: "DataLake_profile"
       region: "ap-southeast-2"
       environment_blueprint_identifier: "DefaultDataLake"
-      project_identifier: "contact_shared"
+      project_identifier: "shared_env"
   datazone_environments:
     Raw:
       name: "contact_datalake_raw"
