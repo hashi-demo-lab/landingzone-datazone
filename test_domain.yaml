@@ -1,6 +1,6 @@
 datazone:
   tfe_workspace: test_domain
-  datazone_domain_name: "retail_contact"
+  datazone_domain_name: "test_domain"
   datazone_description: "RBS contact Datazone"
   datazone_kms_key_identifier: null
   single_sign_on: {}
