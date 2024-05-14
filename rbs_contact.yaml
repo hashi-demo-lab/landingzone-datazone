@@ -41,13 +41,13 @@ datazone_environments:
   datazone_environments:
     Raw:
       name: "contact_datalake_raw"
-      environment_profile_identifier: "DefaultDataLakeContact"
+      environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_raw"
     Curated:
       name: "contact_datalake_curated"
-      environment_profile_identifier: "DefaultDataLakeContact"
+      environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_curated"
     Product:
       name: "contact_datalake_product"
-      environment_profile_identifier: "DefaultDataLakeContact"
+      environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_product"
