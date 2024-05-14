@@ -14,7 +14,7 @@ datazone:
       enabled_regions: ["ap-southeast-2"]
       environment_blueprint_identifier: "DefaultDataLake"
   datazone_projects:
-    shared_env:
+    contact_shared:
       description: "shared environment"
       glossary_terms: ["example"]
     rbs_contact_raw:
@@ -34,10 +34,10 @@ datazone_environments:
   datazone_environment_profiles:
     DefaultDataLakeContact:
       aws_account_id: "855831148133"
-      name: "DataLake_profile_contact"
+      name: "DataLake_profile"
       region: "ap-southeast-2"
       environment_blueprint_identifier: "DefaultDataLake"
-      project_identifier: "shared_env"
+      project_identifier: "contact_shared"
   datazone_environments:
     Raw:
       name: "contact_datalake_raw"
