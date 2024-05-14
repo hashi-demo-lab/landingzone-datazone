@@ -29,7 +29,7 @@ jobs:
     outputs: 
         datazone_config: ${{ steps.datazone-config.outputs.datazone_config }}
   
-  datazone-domain:
+  dz-domain:
     needs: [parse-datazone]
     runs-on: ubuntu-latest
     strategy:
@@ -122,8 +122,8 @@ jobs:
 
 
         
-  datazone-env:
-    needs: [parse-datazone, datazone-domain]
+  dz-env:
+    needs: [parse-datazone, dz-domain]
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 15
