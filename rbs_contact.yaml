@@ -1,0 +1,53 @@
+datazone:
+  tfe_workspace: retail_contact_datazone_ws
+  datazone_domain_name: "retail_contact"
+  datazone_description: "RBS contact Datazone"
+  datazone_kms_key_identifier: null
+  single_sign_on: {}
+  tags: null
+  region: "ap-southeast-2"
+  environment_blueprints:
+    DefaultDataWarehouse:
+      enabled_regions: ["ap-southeast-2"]
+      environment_blueprint_identifier: "DefaultDataWarehouse"
+    DefaultDataLake:
+      enabled_regions: ["ap-southeast-2"]
+      environment_blueprint_identifier: "DefaultDataLake"
+  datazone_projects:
+    shared_env:
+      description: "shared environment"
+      glossary_terms: ["example"]
+    rbs_contact_raw:
+      description: "rbs contact raw"
+      glossary_terms: ["example"]
+    rbs_contact_curated:
+      description: "rbs contact curated"
+      glossary_terms: ["example"]
+    rbs_contact_product:
+      description: "rbs contact product"
+      glossary_terms: ["example"]
+redshift:
+datazone_environments:
+  tfe_workspace: retail_contact_datazone_env_ws
+  datazone_workspace_name: "retail_contact_datazone_ws"
+  region: "ap-southeast-2"
+  datazone_environment_profiles:
+    DefaultDataLake:
+      aws_account_id: "855831148133"
+      name: "DataLake_profile"
+      region: "ap-southeast-2"
+      environment_blueprint_identifier: "DefaultDataLake"
+      project_identifier: "shared_env"
+  datazone_environments:
+    Raw:
+      name: "contact_datalake_raw"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "rbs_contact_raw"
+    Curated:
+      name: "contact_datalake_curated"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "rbs_contact_curated"
+    Product:
+      name: "contact_datalake_product"
+      environment_profile_identifier: "DefaultDataLake"
+      project_identifier: "rbs_contact_product"
