@@ -37,7 +37,7 @@ datazone_environments:
       name: "DataLake_profile"
       region: "ap-southeast-2"
       environment_blueprint_identifier: "DefaultDataLake"
-      project_identifier: "shared_env"
+      project_identifier: "contact_shared"
   datazone_environments:
     Raw:
       name: "contact_datalake_raw"
