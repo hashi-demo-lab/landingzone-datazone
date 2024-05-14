@@ -40,14 +40,14 @@ datazone_environments:
       project_identifier: "contact_shared"
   datazone_environments:
     Raw:
-      name: "contact_datalake_raw"
+      name: "test_domain_datalake_raw"
       environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_raw"
     Curated:
-      name: "contact_datalake_curated"
+      name: "test_domain_datalake_curated"
       environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_curated"
     Product:
-      name: "contact_datalake_product"
+      name: "test_domain_datalake_product"
       environment_profile_identifier: "DefaultDataLake"
       project_identifier: "rbs_contact_product"
